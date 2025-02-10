@@ -35,3 +35,23 @@ public static boolean isValidOperators(String exp) {
     }
     return true;
 }
+public static boolean isValidParenthisis(String exp) {
+    Stack<Character> bracketStack = new Stack<>();
+    for (char symbol : exp.toCharArray()) {
+        if (symbol == '(') {
+            bracketStack.push('(');
+        } else if (symbol == ')') {
+            if (!bracketStack.empty() && bracketStack.peek() == '(') {
+                bracketStack.pop();
+            } else {
+                return false;
+            }
+        } else {
+            if (symbol == '[' || symbol == '{' || symbol == ']' || symbol == '}') {
+                return false;
+            }
+        }
+    }
+    return bracketStack.empty();
+}
+
