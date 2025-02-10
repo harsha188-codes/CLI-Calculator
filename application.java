@@ -25,3 +25,13 @@ public class Application {
         }
     }
 }
+public static boolean isValidOperators(String exp) {
+    for (int index = 0; index < exp.length() - 1; index++) {
+        char currentChar = exp.charAt(index);
+        char nextChar = exp.charAt(index + 1);
+        if (isOperator(currentChar) && isOperator(nextChar)) {
+            return false;
+        }
+    }
+    return true;
+}
