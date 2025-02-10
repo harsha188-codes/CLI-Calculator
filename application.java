@@ -54,4 +54,55 @@ public static boolean isValidParenthisis(String exp) {
     }
     return bracketStack.empty();
 }
+private static String infixToPostfix(String expression) {
+    StringBuilder postfixExpression = new StringBuilder();
+    Stack<Character> operatorStack = new Stack<>();
+
+    String cleanedExpression = expression.replaceAll("\\s+", "");
+    StringBuilder currentNumber = new StringBuilder();
+
+    for (int index = 0; index < cleanedExpression.length(); index++) {
+        char currentChar = cleanedExpression.charAt(index);
+
+        if (Character.isDigit(currentChar) || currentChar == '.') {
+            currentNumber.append(currentChar);
+        } else {
+            if (currentNumber.length() > 0) {
+                postfixExpression.append(currentNumber).append(" ");
+                currentNumber = new StringBuilder();
+            }
+
+            if (currentChar == '(') {
+                operatorStack.push(currentChar);
+            } else if (currentChar == ')') {
+                while (!operatorStack.isEmpty() && operatorStack.peek() != '(') {
+                    postfixExpression.append(operatorStack.pop()).append(" ");
+                }
+                if (!operatorStack.isEmpty()) {
+                    operatorStack.pop(); // Remove '('
+                }
+            } else if (isOperator(currentChar)) {
+                while (!operatorStack.isEmpty() && operatorStack.peek() != '(' &&
+                        getPrecedence(operatorStack.peek()) >= getPrecedence(currentChar)) {
+                    postfixExpression.append(operatorStack.pop()).append(" ");
+                }
+                operatorStack.push(currentChar);
+            }
+        }
+    }
+
+    if (currentNumber.length() > 0) {
+        postfixExpression.append(currentNumber).append(" ");
+    }
+
+    while (!operatorStack.isEmpty()) {
+        if (operatorStack.peek() != '(') {
+            postfixExpression.append(operatorStack.pop()).append(" ");
+        } else {
+            operatorStack.pop();
+        }
+    }
+
+    return postfixExpression.toString().trim();
+}
 
